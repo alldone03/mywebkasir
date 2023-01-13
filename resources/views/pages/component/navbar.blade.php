@@ -46,16 +46,21 @@
                 <span>Dashboard</span>
             </a>
         </li>
+        <li class="sidebar-item active ">
+            <a href="{{ route('data.index') }}" class='sidebar-link'>
+                <i class="bi bi-grid-fill"></i>
+                <span>Tambah Data</span>
+            </a>
+        </li>
         <li class="sidebar-title">Action</li>
         <li class="sidebar-item">
-            <form action="{{ route('login.logout') }}" method="post">
+            <form action="{{ route('dashboard.logout') }}" method="POST">
                 @csrf
-                <button type="submit"class='btn btn-danger sidebar-link'>
+                <button type="submit" class='btn btn-danger sidebar-link'>
                     <span class="fa-fw select-all fas"></span>
                     <span>Logout</span>
                 </button>
             </form>
-
         </li>
     </ul>
 </div>

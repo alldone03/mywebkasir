@@ -24,15 +24,8 @@ class login_cont extends Controller
 
         if (Auth::attempt($validate)) {
             request()->session()->regenerate();
-            return redirect()->intended('dashboard.index');
+            return redirect()->intended(route('dashboard.index'));
         }
         return redirect()->back()->withErrors(['msg' => 'Kombinasi Salah']);
-    }
-    public function logout()
-    {
-        Auth::logout();
-        request()->session()->invalidate();
-        request()->session()->regenerateToken();
-        return redirect('login.index');
     }
 }
