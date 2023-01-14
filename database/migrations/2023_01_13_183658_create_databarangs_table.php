@@ -15,6 +15,11 @@ return new class extends Migration
     {
         Schema::create('databarangs', function (Blueprint $table) {
             $table->id();
+            $table->string('barcode')->nullable();
+            $table->string('namabarang');
+            $table->integer('jumlahbarang');
+            $table->integer('hargaawal');
+            $table->integer('hargajual')->nullable();
             $table->timestamps();
         });
     }

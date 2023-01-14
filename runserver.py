@@ -3,7 +3,8 @@ import os
 import pyperclip
 import socket
 
-print("Running ON: "+str(socket.gethostbyname(socket.gethostname())))
+print("Running ON: http://"+str(socket.gethostbyname(socket.gethostname()))+"/")
+os.system("start http://"+str(socket.gethostbyname(socket.gethostname()))+" /")
 pyperclip.copy(str(socket.gethostbyname(socket.gethostname())))
 
 dataip = socket.gethostbyname(socket.gethostname())

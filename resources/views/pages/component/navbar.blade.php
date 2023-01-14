@@ -46,7 +46,7 @@
                 <span>Dashboard</span>
             </a>
         </li>
-        <li class="sidebar-item active ">
+        <li class="sidebar-item">
             <a href="{{ route('data.index') }}" class='sidebar-link'>
                 <i class="bi bi-grid-fill"></i>
                 <span>Tambah Data</span>

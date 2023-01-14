@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\databarang;
 use App\Http\Requests\StoredatabarangRequest;
 use App\Http\Requests\UpdatedatabarangRequest;
+use Illuminate\Support\Facades\Auth;
 
 class DatabarangController extends Controller
 {
@@ -25,7 +26,17 @@ class DatabarangController extends Controller
      */
     public function create()
     {
-        //
+        // dd(request()->all());
+        $validate = request()->validate([
+            'barcode' => '',
+            'namabarang' => 'required|unique:databarangs',
+            'jumlahbarang' => 'required',
+            'hargaawal' => 'required',
+            'hargajual' => '',
+        ]);
+        databarang::create($validate);
+
+        return redirect()->route('data.index')->with(['status' => 'Data berhasil diTambahkan']);
     }
 
     /**
@@ -34,9 +45,8 @@ class DatabarangController extends Controller
      * @param  \App\Http\Requests\StoredatabarangRequest  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(StoredatabarangRequest $request)
+    public function store(StoredatabarangRequest  $request)
     {
-        //
     }
 
     /**
