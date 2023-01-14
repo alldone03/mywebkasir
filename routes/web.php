@@ -43,5 +43,6 @@ Route::middleware('auth')->group(function () {
     Route::name('data.')->controller(DatabarangController::class)->prefix('data')->group(function () {
         Route::get('', 'index')->name('index');
         Route::post('create', 'create')->name('create');
+        Route::post('update', 'update')->name('update');
     });
 });

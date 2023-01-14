@@ -16,7 +16,8 @@ class DatabarangController extends Controller
      */
     public function index()
     {
-        return view('pages.barang');
+        $data = databarang::all();
+        return view('pages.barang', ['data' => $data]);
     }
 
     /**
@@ -78,9 +79,17 @@ class DatabarangController extends Controller
      * @param  \App\Models\databarang  $databarang
      * @return \Illuminate\Http\Response
      */
-    public function update(UpdatedatabarangRequest $request, databarang $databarang)
+    public function update()
     {
-        //
+
+        $data = databarang::find(request()->id);
+        $data->barcode = request()->barcode;
+        $data->namabarang = request()->namabarang;
+        $data->jumlahbarang = request()->jumlahbarang;
+        $data->hargaawal = request()->hargaawal;
+        $data->hargajual = request()->hargajual;
+        $data->update();
+        return redirect()->route('data.index');
     }
 
     /**

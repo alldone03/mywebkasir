@@ -13,6 +13,7 @@
 
     <link rel="stylesheet" href="{{ asset('assets/css/shared/iconly.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/extensions/@fortawesome/fontawesome-free/css/all.min.css') }}">
+    @stack('scriptHeader')
 
 </head>
 
