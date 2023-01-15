@@ -4,6 +4,7 @@ import pyperclip
 import socket
 
 print("Running ON: http://"+str(socket.gethostbyname(socket.gethostname()))+"/")
+os.system("code .")
 os.system("start http://"+str(socket.gethostbyname(socket.gethostname()))+" /")
 pyperclip.copy(str(socket.gethostbyname(socket.gethostname())))
 

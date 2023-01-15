@@ -98,8 +98,10 @@ class DatabarangController extends Controller
      * @param  \App\Models\databarang  $databarang
      * @return \Illuminate\Http\Response
      */
-    public function destroy(databarang $databarang)
+    public function destroy()
     {
-        //
+        $data = databarang::find(request()->id);
+        $data->delete();
+        return redirect()->route('data.index');
     }
 }

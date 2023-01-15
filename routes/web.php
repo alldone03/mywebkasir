@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\dashboardcont;
 use App\Http\Controllers\DatabarangController;
+use App\Http\Controllers\KasirController;
 use App\Http\Controllers\login_cont;
 
 use Illuminate\Support\Facades\Auth;
@@ -44,5 +45,11 @@ Route::middleware('auth')->group(function () {
         Route::get('', 'index')->name('index');
         Route::post('create', 'create')->name('create');
         Route::post('update', 'update')->name('update');
+        Route::delete('destroy', 'destroy')->name('destroy');
+    });
+    Route::name('kasir.')->controller(KasirController::class)->prefix('kasir')->group(function () {
+        Route::get('', 'index')->name('index');
+        Route::post('create', 'create')->name('create');
+        Route::put('edit', 'edit')->name('edit');
     });
 });

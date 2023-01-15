@@ -10,7 +10,7 @@
     </div>
     <div class="page-content">
         <section class="row">
-            <div class="col-12 col-lg-3">
+            <div class="col-12 col-md-4">
                 <div class="card">
                     <div class="card-header">
                         <h4 class="card-title">Tambah Data</h4>
@@ -101,115 +101,129 @@
                     </div>
                 </div>
             </div>
-            <div class="col-12 col-lg-9">
-                <div class="card">
-                    <div class="card-header">
-                        <h4 class="card-title">Data Barang</h4>
-                    </div>
-                    <div class="card-body">
-
-                        <div id="table1_wrapper" class="dataTables_wrapper dt-bootstrap5 no-footer">
-                            <table class="table dataTable no-footer" id="table1" aria-describedby="table1_info">
-                                <thead>
-                                    <tr>
-                                        <th>No</th>
-                                        <th>Barcode</th>
-                                        <th>Nama Barang</th>
-                                        <th>Jumlah Barang</th>
-                                        <th>Harga Awal</th>
-                                        <th>Harga Jual</th>
-                                        <th>Action</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach ($data as $index => $d)
-                                        <tr class="{{ ($index + 1) % 2 == 0 ? 'even' : 'odd' }}">
-                                            <td>{{ $index + 1 }}</td>
-                                            <td>{{ $d->barcode }}</td>
-                                            <td>{{ $d->namabarang }}</td>
-                                            <td>{{ $d->jumlahbarang }}</td>
-                                            <td>{{ $d->hargaawal }}</td>
-                                            <td>{{ $d->hargajual }}</td>
-                                            <td>
-                                                <div class="align-item-center">
-                                                    <button type="button" class="btn btn-outline-warning"
-                                                        data-bs-toggle="modal" data-bs-target="#addData{{ $d->id }}"
-                                                        data-bs-whatever="">Update</button>
+            <div class="row">
 
 
-                                                    <div class="modal fade" id="addData{{ $d->id }}" tabindex="-1"
-                                                        aria-labelledby="addData{{ $d->id }}Label"
-                                                        aria-hidden="true">
-                                                        <div class="modal-dialog">
-                                                            <div class="modal-content">
-                                                                <div class="modal-header">
-                                                                    <h5 class="modal-title"
-                                                                        id="addData{{ $d->id }}Label">Update Data
-                                                                        {{ $d->namabarang }}
-                                                                    </h5>
-                                                                    <button type="button" class="btn-close"
-                                                                        data-bs-dismiss="modal"
-                                                                        aria-label="Close"></button>
+                <div class="col-12 col-lg-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <h4 class="card-title">Data Barang</h4>
+                        </div>
+                        <div class="card-body">
+
+                            <div id="table1_wrapper" class="dataTables_wrapper dt-bootstrap5 no-footer">
+                                <table class="table dataTable no-footer" id="table1" aria-describedby="table1_info">
+                                    <thead>
+                                        <tr>
+                                            <th>No</th>
+                                            <th>Barcode</th>
+                                            <th>Nama Barang</th>
+                                            <th>Jumlah Barang</th>
+                                            <th>Harga Awal</th>
+                                            <th>Harga Jual</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach ($data as $index => $d)
+                                            <tr class="{{ ($index + 1) % 2 == 0 ? 'even' : 'odd' }}">
+                                                <td>{{ $index + 1 }}</td>
+                                                <td>{{ $d->barcode }}</td>
+                                                <td>{{ $d->namabarang }}</td>
+                                                <td>{{ $d->jumlahbarang }}</td>
+                                                <td>{{ $d->hargaawal }}</td>
+                                                <td>{{ $d->hargajual }}</td>
+                                                <td>
+                                                    <div class="align-item-center">
+                                                        <button type="button" class="btn btn-outline-warning"
+                                                            data-bs-toggle="modal"
+                                                            data-bs-target="#addData{{ $d->id }}"
+                                                            data-bs-whatever="">Update</button>
+                                                        <div class="modal fade" id="addData{{ $d->id }}"
+                                                            tabindex="-1"
+                                                            aria-labelledby="addData{{ $d->id }}Label"
+                                                            aria-hidden="true">
+                                                            <div class="modal-dialog">
+                                                                <div class="modal-content">
+                                                                    <div class="modal-header">
+                                                                        <h5 class="modal-title"
+                                                                            id="addData{{ $d->id }}Label">Update
+                                                                            Data
+                                                                            {{ $d->namabarang }}
+                                                                        </h5>
+                                                                        <button type="button" class="btn-close"
+                                                                            data-bs-dismiss="modal"
+                                                                            aria-label="Close"></button>
+                                                                    </div>
+                                                                    <form method="POST"
+                                                                        action="{{ route('data.update') }}">
+                                                                        @csrf
+                                                                        <input type="hidden" name="id"
+                                                                            value="{{ $d->id }}">
+                                                                        <div class="modal-body">
+                                                                            <div class="mb-3">
+                                                                                <label for="barcode"
+                                                                                    class="col-form-label">Barcode</label>
+                                                                                <input type="text" name="barcode"
+                                                                                    class="form-control" id="barcode"
+                                                                                    value="{{ $d->barcode }}">
+                                                                            </div>
+                                                                            <div class="mb-3">
+                                                                                <label for="namabarang"
+                                                                                    class="col-form-label">namabarang</label>
+                                                                                <input type="text" name="namabarang"
+                                                                                    class="form-control" id="namabarang"
+                                                                                    value="{{ $d->namabarang }}">
+                                                                            </div>
+                                                                            <div class="mb-3">
+                                                                                <label for="jumlahbarang"
+                                                                                    class="col-form-label">Jumlah
+                                                                                    Barang</label>
+                                                                                <input type="number" name="jumlahbarang"
+                                                                                    class="form-control" id="jumlahbarang"
+                                                                                    value="{{ $d->jumlahbarang }}">
+                                                                            </div>
+                                                                            <div class="mb-3">
+                                                                                <label for="hargaawal"
+                                                                                    class="col-form-label">hargaawal</label>
+                                                                                <input type="number" name="hargaawal"
+                                                                                    class="form-control" id="hargaawal"
+                                                                                    value="{{ $d->hargaawal }}">
+                                                                            </div>
+                                                                            <div class="mb-3">
+                                                                                <label for="hargajual"
+                                                                                    class="col-form-label">hargajual</label>
+                                                                                <input type="number" name="hargajual"
+                                                                                    class="form-control" id="hargajual"
+                                                                                    value="{{ $d->hargajual }}">
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="modal-footer">
+                                                                            <button type="button"
+                                                                                class="btn btn-secondary"
+                                                                                data-bs-dismiss="modal">Close</button>
+                                                                            <button type="submit"
+                                                                                class="btn btn-primary">Submit</button>
+                                                                        </div>
+                                                                    </form>
                                                                 </div>
-                                                                <form method="POST" action="{{ route('data.update') }}">
-                                                                    @csrf
-                                                                    <input type="hidden" name="id"
-                                                                        value="{{ $d->id }}">
-                                                                    <div class="modal-body">
-                                                                        <div class="mb-3">
-                                                                            <label for="barcode"
-                                                                                class="col-form-label">Barcode</label>
-                                                                            <input type="text" name="barcode"
-                                                                                class="form-control" id="barcode"
-                                                                                value="{{ $d->barcode }}">
-                                                                        </div>
-                                                                        <div class="mb-3">
-                                                                            <label for="namabarang"
-                                                                                class="col-form-label">namabarang</label>
-                                                                            <input type="text" name="namabarang"
-                                                                                class="form-control" id="namabarang"
-                                                                                value="{{ $d->namabarang }}">
-                                                                        </div>
-                                                                        <div class="mb-3">
-                                                                            <label for="jumlahbarang"
-                                                                                class="col-form-label">Jumlah
-                                                                                Barang</label>
-                                                                            <input type="number" name="jumlahbarang"
-                                                                                class="form-control" id="jumlahbarang"
-                                                                                value="{{ $d->jumlahbarang }}">
-                                                                        </div>
-                                                                        <div class="mb-3">
-                                                                            <label for="hargaawal"
-                                                                                class="col-form-label">hargaawal</label>
-                                                                            <input type="number" name="hargaawal"
-                                                                                class="form-control" id="hargaawal"
-                                                                                value="{{ $d->hargaawal }}">
-                                                                        </div>
-                                                                        <div class="mb-3">
-                                                                            <label for="hargajual"
-                                                                                class="col-form-label">hargajual</label>
-                                                                            <input type="number" name="hargajual"
-                                                                                class="form-control" id="hargajual"
-                                                                                value="{{ $d->hargajual }}">
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="modal-footer">
-                                                                        <button type="button" class="btn btn-secondary"
-                                                                            data-bs-dismiss="modal">Close</button>
-                                                                        <button type="submit"
-                                                                            class="btn btn-primary">Submit</button>
-                                                                    </div>
-                                                                </form>
                                                             </div>
                                                         </div>
+                                                        <form action="{{ route('data.destroy') }}" method="post">
+                                                            @method('delete')
+                                                            @csrf
+                                                            <input type="hidden" name="id"
+                                                                value="{{ $d->id }}">
+                                                            <button class="btn btn-outline-danger"
+                                                                onclick="return confirm('Apakan Anda Yakin Menghapus Item ini?');">Delete</button>
+                                                        </form>
                                                     </div>
-                                                    <button class="btn btn-outline-danger">Delete</button>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
+                                                </td>
+                                            </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
                     </div>
                 </div>
