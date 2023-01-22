@@ -7,7 +7,7 @@
         <link rel="stylesheet" href="{{ asset('assets/css/pages/datatables.css') }}">
     @endPushOnce
     <div class="page-heading">
-        <h3>Kasir</h3>
+        <h3>Kasir - No.Nota : {{ $nomernota }}</h3>
     </div>
     <div class="page-content">
         <div class="row">
@@ -78,12 +78,13 @@
                                 </thead>
                                 <tbody>
                                     @foreach ($datakeranjang as $index => $d)
-                                        <tr class="{{ ($index + 1) % 2 == 0 ? 'even' : 'odd' }}">
-                                            <td>{{ $index + 1 }}</td>
-                                            <td>{{ $d->barcode }}</td>
-                                            <td>{{ $d->namabarang }}</td>
-                                            <td id="hargajual{{ $d->id }}">{{ $d->hargajual }}</td>
-                                            <td>
+                                        <tr class="{{ ($index + 1) % 2 == 0 ? 'even' : 'odd' }} data">
+                                            <td class="tbvalue">{{ $index + 1 }}</td>
+                                            <td class="tbvalue">{{ $d->barcode }}</td>
+                                            <td class="tbvalue">{{ $d->namabarang }}</td>
+                                            <td class="tbvalue" id="hargajual{{ $d->id }}">{{ $d->hargajual }}</td>
+                                            <td class="tbvalue">
+                                                <p hidden>{{ $d->jumlahbarang }}</p>
                                                 <div class="d-flex justify-content-around">
                                                     <div class="d-inline-flex">
                                                         <button class="btn btn-outline-danger kurang"
@@ -100,8 +101,8 @@
                                                 </div>
                                             </td>
 
-                                            <td id="hargatotal{{ $d->id }}">{{ $d->hargajual * $d->jumlahbarang }}
-                                            </td>
+                                            <td class="tbvalue" id="hargatotal{{ $d->id }}">
+                                                {{ $d->hargajual * $d->jumlahbarang }}</td>
                                         </tr>
                                     @endforeach
                                 </tbody>
@@ -141,6 +142,19 @@
 
                 $('.jumlahbarang').on('change', function(e) {
                     e.preventDefault();
+                    var data = $('#table2 tr.data').map(function(index, element) {
+                        var ret = [];
+                        $('.tbvalue', this).each(function() {
+                            var d = $(this).val() || $(this).text();
+                            ret.push(d);
+                            // console.log(d);
+                            if (d == "N/A") {
+                                // console.log(true);
+                            }
+                        });
+                        return ret;
+                    });
+                    // console.log(data);
                     var iddatabs = $(this).attr("data-bs-id");
                     var valuedatabs1 = this.value;
                     $.ajax({
@@ -155,13 +169,16 @@
                             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                         },
                         success: function(data) {
-                            // console.log(data.data);
-                            var datahargajual = parseInt($('#hargajual' + iddatabs).html());
-                            $('#hargatotal' + iddatabs).html(datahargajual * data.data);
-                            $('#valuejumlahbarang' + iddatabs).val(data.data);
-                            if (data.data == 0) {
-                                confirm('anda akan menghapus?');
-                                // window.location.reload();
+
+                            if (data.data == undefined) {
+                                var datahargajual = parseInt($('#hargajual' + iddatabs).html());
+                                $('#hargatotal' + iddatabs).html(0);
+                                $('#valuejumlahbarang' + iddatabs).val(0);
+                                window.location.reload();
+                            } else {
+                                var datahargajual = parseInt($('#hargajual' + iddatabs).html());
+                                $('#hargatotal' + iddatabs).html(datahargajual * data.data);
+                                $('#valuejumlahbarang' + iddatabs).val(data.data);
                             }
                         }
                     });
@@ -191,6 +208,7 @@
 
                     if (data == 0) {
                         if (confirm('anda akan menghapus?') == true) {
+                            updatedb(attrkurang, data);
                             window.location.reload();
 
                         } else {

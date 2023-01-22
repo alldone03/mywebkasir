@@ -52,4 +52,9 @@ Route::middleware('auth')->group(function () {
         Route::post('create', 'create')->name('create');
         Route::put('edit', 'edit')->name('edit');
     });
+    Route::name('report.')->controller(reportController::class)->prefix('report')->group(function () {
+        Route::get('', 'index')->name('index');
+        Route::post('create', 'create')->name('create');
+        Route::put('edit', 'edit')->name('edit');
+    });
 });

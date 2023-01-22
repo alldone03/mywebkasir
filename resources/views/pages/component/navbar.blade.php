@@ -59,6 +59,12 @@
                 <span>Tambah Data</span>
             </a>
         </li>
+        <li class="sidebar-item {{ Route::is('report.index') ? ' active' : '' }}  ">
+            <a href="{{ route('report.index') }}" class='sidebar-link'>
+                <i class="bi bi-grid-fill"></i>
+                <span>Laporan</span>
+            </a>
+        </li>
         <li class="sidebar-title">Action</li>
         <li class="sidebar-item">
             <form action="{{ route('dashboard.logout') }}" method="POST">

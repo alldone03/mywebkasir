@@ -6,6 +6,7 @@ use App\Models\kasir;
 use App\Http\Requests\StorekasirRequest;
 use App\Http\Requests\UpdatekasirRequest;
 use App\Models\databarang;
+use App\Models\nomernota;
 use Illuminate\Support\Facades\Auth;
 
 class KasirController extends Controller
@@ -17,9 +18,29 @@ class KasirController extends Controller
      */
     public function index()
     {
+        // dd(!isset(nomernota::all()->where('iduser', '=', Auth::user()->id)->last()->id));
+
+        if (nomernota::all()->last() == null) {
+            $nomernota = 1;
+            nomernota::create(['iduser' => Auth::user()->id, 'nomernota' => $nomernota]);
+        } else if (nomernota::all()->where('iduser', '=', Auth::user()->id)->last() == null || !isset(nomernota::all()->where('iduser', '=', Auth::user()->id)->last()->id)) {
+            if (!isset(nomernota::all()->where('iduser', '=', Auth::user()->id)->last()->id)) {
+                $nomernota = nomernota::all()->sortBy('nomernota')->last()->nomernota + 1;
+                // dd($nomernota);
+                nomernota::create(['iduser' => Auth::user()->id, 'nomernota' => $nomernota + 1]);
+            } else {
+
+                $modelupdate = nomernota::find(nomernota::all()->where('iduser', '=', Auth::user()->id)->last()->id);
+                $nomernota = nomernota::all()->sortByDesc('nomernota')->last()->nomernota + 1;
+                $modelupdate->nomernota = $nomernota;
+                $modelupdate->update();
+            }
+        } else if (nomernota::all()->where('iduser', '=', Auth::user()->id)->last() != null) {
+            $nomernota = nomernota::find(nomernota::all()->where('iduser', '=', Auth::user()->id)->last()->id)->nomernota;
+        }
         $data = databarang::all();
         $datakeranjang = kasir::all();
-        return view('pages.kasir', ['data' => $data, 'datakeranjang' => $datakeranjang]);
+        return view('pages.kasir', ['data' => $data, 'datakeranjang' => $datakeranjang, 'nomernota' => $nomernota]);
     }
 
     /**
