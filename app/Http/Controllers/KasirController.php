@@ -26,8 +26,7 @@ class KasirController extends Controller
         } else if (nomernota::all()->where('iduser', '=', Auth::user()->id)->last() == null || !isset(nomernota::all()->where('iduser', '=', Auth::user()->id)->last()->id)) {
             if (!isset(nomernota::all()->where('iduser', '=', Auth::user()->id)->last()->id)) {
                 $nomernota = nomernota::all()->sortBy('nomernota')->last()->nomernota + 1;
-                // dd($nomernota);
-                nomernota::create(['iduser' => Auth::user()->id, 'nomernota' => $nomernota + 1]);
+                nomernota::create(['iduser' => Auth::user()->id, 'nomernota' => $nomernota]);
             } else {
 
                 $modelupdate = nomernota::find(nomernota::all()->where('iduser', '=', Auth::user()->id)->last()->id);
