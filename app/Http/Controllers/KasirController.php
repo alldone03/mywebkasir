@@ -51,7 +51,7 @@ class KasirController extends Controller
     {
         $fromdbbarang = databarang::find(request()->id);
 
-        $nomernota = 1;
+        $nomernota = nomernota::find(nomernota::all()->where('iduser', '=', Auth::user()->id)->last()->id)->nomernota;
         // dd(kasir::where('idbarang', '=', request()->id)->first()->id, databarang::find(request()->id)->first()->id);
         if (databarang::find(request()->id)->first()->id == isset(kasir::where('idbarang', '=', request()->id)->first()->idbarang)) {
             $datakasir = kasir::find(kasir::where('idbarang', '=', request()->id)->first()->id);
@@ -142,5 +142,15 @@ class KasirController extends Controller
     public function destroy(kasir $kasir)
     {
         //
+    }
+    public function submitdata()
+    {
+        $datakeranjang = kasir::find(kasir::all()->where('nomernota', '=', nomernota::find(nomernota::all()->where('iduser', '=', Auth::user()->id)->last()->id)->nomernota));
+        $datajumlah = [];
+        foreach ($datakeranjang as $key => $value) {
+            array_push($datajumlah, $value->hargajual * $value->jumlahbarang);
+        }
+        // dd(array_sum($datajumlah));
+        return view('pages.submitbarang', ['datakeranjang' => $datakeranjang, 'sumdata' => array_sum($datajumlah)]);
     }
 }

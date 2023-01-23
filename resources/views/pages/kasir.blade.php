@@ -91,7 +91,7 @@
                                                             data-bs-id="{{ $d->id }}" type="button">-</button>
                                                     </div>
                                                     <div class="d-inline-flex">
-                                                        <input type="text" class="btn btn-outline-dark jumlahbarang"
+                                                        <input type="text" class="btn btn-outline-primary jumlahbarang"
                                                             value="{{ $d->jumlahbarang }}"
                                                             id="valuejumlahbarang{{ $d->id }}"
                                                             data-bs-id="{{ $d->id }}">
@@ -107,6 +107,12 @@
                                     @endforeach
                                 </tbody>
                             </table>
+                            <div class="mt-3" style="DISPLAY: FLEX;JUSTIFY-CONTENT: RIGHT;">
+                                <form action="{{ route('kasir.submitdata') }}" method="post">
+                                    @csrf
+                                    <button type="submit" class="btn btn-danger">Submit</button>
+                                </form>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -235,6 +241,15 @@
                 });
 
 
+            });
+        </script>
+        <script>
+            let jquery_datatable = $("#table1").DataTable();
+            let jquery_datatable2 = $("#table2").DataTable({
+                "scrollX": true,
+                "autoWidth": false,
+                "dom": 'Bfrtip',
+                "bAutoWidth": false,
             });
         </script>
     @endPushOnce

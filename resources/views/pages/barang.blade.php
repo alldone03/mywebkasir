@@ -107,12 +107,14 @@
                 <div class="col-12 col-lg-12">
                     <div class="card">
                         <div class="card-header">
-                            <h4 class="card-title">Data Barang</h4>
+                            <h4 class="card-title">Data Barang
+                            </h4>
                         </div>
                         <div class="card-body">
 
                             <div id="table1_wrapper" class="dataTables_wrapper dt-bootstrap5 no-footer">
-                                <table class="table dataTable no-footer" id="table1" aria-describedby="table1_info">
+                                <table class="table dataTable no-footer display nowrap" id="table2"
+                                    aria-describedby="table2_info">
                                     <thead>
                                         <tr>
                                             <th>No</th>
@@ -233,6 +235,15 @@
     @pushOnce('js')
         <script src="{{ asset('assets/extensions/jquery/jquery.min.js') }}"></script>
         <script src="{{ asset('assets/js/pages/datatables.min.js') }}"></script>
-        <script src="{{ asset('assets/js/pages/datatables.js') }}"></script>
+
+        <script>
+            let jquery_datatable = $("#table1").DataTable();
+            let jquery_datatable2 = $("#table2").DataTable({
+                "scrollX": true,
+                "autoWidth": false,
+                "dom": 'Bfrtip',
+                "bAutoWidth": false,
+            });
+        </script>
     @endPushOnce
 @endsection
