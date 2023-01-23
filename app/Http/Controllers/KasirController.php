@@ -7,6 +7,7 @@ use App\Http\Requests\StorekasirRequest;
 use App\Http\Requests\UpdatekasirRequest;
 use App\Models\databarang;
 use App\Models\nomernota;
+use App\Models\report;
 use Illuminate\Support\Facades\Auth;
 
 class KasirController extends Controller
@@ -18,7 +19,7 @@ class KasirController extends Controller
      */
     public function index()
     {
-        // dd(!isset(nomernota::all()->where('iduser', '=', Auth::user()->id)->last()->id));
+
 
         if (nomernota::all()->last() == null) {
             $nomernota = 1;
@@ -37,8 +38,9 @@ class KasirController extends Controller
         } else if (nomernota::all()->where('iduser', '=', Auth::user()->id)->last() != null) {
             $nomernota = nomernota::find(nomernota::all()->where('iduser', '=', Auth::user()->id)->last()->id)->nomernota;
         }
-        $data = databarang::all();
-        $datakeranjang = kasir::all()->where('nomernota', '=', $nomernota);
+
+        $data = databarang::all()->whereNotNull('hargajual');
+        $datakeranjang = kasir::where('nomernota', '=', $nomernota)->get();
         return view('pages.kasir', ['data' => $data, 'datakeranjang' => $datakeranjang, 'nomernota' => $nomernota]);
     }
 
@@ -52,13 +54,12 @@ class KasirController extends Controller
         $fromdbbarang = databarang::find(request()->id);
 
         $nomernota = nomernota::find(nomernota::all()->where('iduser', '=', Auth::user()->id)->last()->id)->nomernota;
+
         // dd(kasir::where('idbarang', '=', request()->id)->first()->id, databarang::find(request()->id)->first()->id);
-        if (databarang::find(request()->id)->first()->id == isset(kasir::where('idbarang', '=', request()->id)->first()->idbarang)) {
-            $datakasir = kasir::find(kasir::where('idbarang', '=', request()->id)->first()->id);
-            $datakasir->jumlahbarang += 1;
-            $datakasir->update();
-            return redirect()->route('kasir.index');
-        } else {
+        // dd(databarang::find(request()->id)->first()->id == isset(kasir::where('idbarang', '=', request()->id)->first()->idbarang));
+        // gaada id nomornota jika dikasir ditemukan nomornota maka
+        // dd(kasir::all()->sortByDesc('updated_at')->where('namakasir', '=', Auth::user()->name)->first()->nomernota);
+        if ($nomernota != kasir::all()->sortByDesc('updated_at')->where('namakasir', '=', Auth::user()->name)->first()->nomernota && kasir::all()->sortByDesc('updated_at')->where('namakasir', '=', Auth::user()->name)->where('nomernota', '=', $nomernota)->first()->idbarang == $fromdbbarang->idbarang) {
             kasir::create([
                 'nomernota' => $nomernota,
                 'namakasir' => Auth::user()->name,
@@ -68,6 +69,11 @@ class KasirController extends Controller
                 'jumlahbarang' => 1,
                 'hargajual' => $fromdbbarang->hargajual,
             ]);
+        } else if (databarang::find(request()->id)->first()->id == kasir::all()->where('idbarang', '=', request()->id)->first()->idbarang) {
+            $datakasir = kasir::find(kasir::where('idbarang', '=', request()->id)->first()->id);
+            $datakasir->jumlahbarang += 1;
+            $datakasir->update();
+            return redirect()->route('kasir.index');
         }
         return redirect()->back();
     }
@@ -152,5 +158,18 @@ class KasirController extends Controller
         }
         // dd(array_sum($datajumlah));
         return view('pages.submitbarang', ['datakeranjang' => $datakeranjang, 'sumdata' => array_sum($datajumlah)]);
+    }
+    public function print()
+    {
+        $getdatakasir = kasir::all()->where('nomernota', '=', nomernota::find(nomernota::all()->where('iduser', '=', Auth::user()->id)->last()->id)->nomernota);
+
+        foreach ($getdatakasir as $key => $value) {
+            report::create([
+                'nomernota' => nomernota::find(nomernota::all()->where('iduser', '=', Auth::user()->id)->last()->id)->nomernota, 'iduser' => Auth::user()->id, 'idbarang' => $value->idbarang, 'barangterjual' => $value->jumlahbarang, 'hargajual' => $value->hargajual
+            ]);
+        }
+        $nomernota = nomernota::find(nomernota::all()->where('iduser', '=', Auth::user()->id)->last()->id);
+        $nomernota->nomernota += 1;
+        $nomernota->update();
     }
 }

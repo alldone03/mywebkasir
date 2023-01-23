@@ -11,7 +11,7 @@
         </style>
     @endPushOnce
     <div class="page-heading">
-        <h3>Data</h3>
+        <h3>Checkout</h3>
     </div>
     <div class="page-content">
         <section class="row">
@@ -23,7 +23,7 @@
                         </div>
                         <div class="card-body">
                             <div id="table1_wrapper" class="dataTables_wrapper dt-bootstrap5 no-footer">
-                                <table class="table dataTable no-footer" id="table2" aria-describedby="table1_info">
+                                <table class="table dataTable no-footer" id="table2" aria-describedby="table2_info">
                                     <thead>
                                         <tr>
                                             <th>No</th>
@@ -86,7 +86,7 @@
                                     <div>
                                         <div>
                                             <form class="form form-horizontal" method="POST"
-                                                action="{{ route('data.create') }}">
+                                                action="{{ route('kasir.print') }}">
                                                 @csrf
                                                 <div class="form-body">
                                                     <div class="row">
@@ -119,16 +119,13 @@
                                                             <input type="text" name="kembali" class="form-control"
                                                                 data-parsley-required="true" id="kembali" value=""
                                                                 style="text-align:right" readonly>
-
                                                         </div>
-
                                                     </div>
-
                                                     <div class="col-sm-12 d-flex justify-content-end">
                                                         <a type="button" href="{{ route('kasir.index') }}"
                                                             class="btn btn-danger me-1 mb-1">Batal</a>
-                                                        <button type="submit"
-                                                            class="btn btn-primary me-1 mb-1">Submit</button>
+                                                        <button type="submit" class="btn btn-primary me-1 mb-1"
+                                                            onclick="return handleChange()">Submit</button>
                                                     </div>
                                                 </div>
                                             </form>
@@ -144,12 +141,26 @@
         </section>
     </div>
     @pushOnce('js')
+        <script>
+            function handleChange() {
+                if ($('#kembali').val().length === 0) {
+                    alert("Form bayar Wajib disi");
+                    return false;
+                }
+                if ($('#kembali').val() < 0) {
+                    if (!confirm("apakah Akan Berhutang")) {
+                        return false;
+                    }
+                }
+                return true;
+            }
+        </script>
         <script src="{{ asset('assets/extensions/jquery/jquery.min.js') }}"></script>
         <script src="{{ asset('assets/js/pages/datatables.min.js') }}"></script>
         <script>
             $(document).ready(function() {
                 $('#bayar').on('change', function() {
-                    console.log($(this).val());
+
                     $('#kembali').val($(this).val() - $('#total').val());
                 })
 
@@ -157,14 +168,13 @@
             });
         </script>
         <script>
-            // let jquery_datatable = $("#table1").DataTable();
             let jquery_datatable2 = $("#table2").DataTable({
                 "scrollX": true,
                 "autoWidth": false,
                 "dom": 'Bfrtip',
                 "bAutoWidth": false,
                 "bPaginate": false,
-
+                'lengthChange": false
             });
         </script>
     @endPushOnce

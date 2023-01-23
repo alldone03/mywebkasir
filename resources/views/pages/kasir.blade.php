@@ -188,26 +188,11 @@
                             }
                         }
                     });
-
-
-
-
-
-
-
                 });
-
-
-
-
-
                 $('.kurang').on('click', function(e) {
                     e.preventDefault()
                     var attrkurang = $(this).attr("data-bs-id");
                     var data = parseInt($('#valuejumlahbarang' + attrkurang).val());
-
-
-
                     $('#valuejumlahbarang' + attrkurang).val(data -= 1);
                     var datahargajual = parseInt($('#hargajual' + attrkurang).html());
                     $('#hargatotal' + attrkurang).html(datahargajual * data);
@@ -216,16 +201,14 @@
                         if (confirm('anda akan menghapus?') == true) {
                             updatedb(attrkurang, data);
                             window.location.reload();
-
                         } else {
-
                             $('#valuejumlahbarang' + attrkurang).val(data = 1);
                             var datahargajual = parseInt($('#hargajual' + attrkurang).html());
                             $('#hargatotal' + attrkurang).html(datahargajual * data);
                             updatedb(attrkurang, data);
                         }
-
                     }
+                    updatedb(attrkurang, data);
                 });
 
                 $('.tambah').on('click', function(e) {

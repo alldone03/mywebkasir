@@ -15,6 +15,11 @@ return new class extends Migration
     {
         Schema::create('reports', function (Blueprint $table) {
             $table->id();
+            $table->integer('nomernota');
+            $table->integer('iduser');
+            $table->integer('idbarang');
+            $table->integer('barangterjual');
+            $table->integer('hargajual');
             $table->timestamps();
         });
     }
