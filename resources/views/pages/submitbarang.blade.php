@@ -123,7 +123,10 @@
                                                         </div>
 
                                                     </div>
+
                                                     <div class="col-sm-12 d-flex justify-content-end">
+                                                        <a type="button" href="{{ route('kasir.index') }}"
+                                                            class="btn btn-danger me-1 mb-1">Batal</a>
                                                         <button type="submit"
                                                             class="btn btn-primary me-1 mb-1">Submit</button>
                                                     </div>

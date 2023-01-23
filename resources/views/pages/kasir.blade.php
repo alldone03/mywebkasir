@@ -110,7 +110,7 @@
                             <div class="mt-3" style="DISPLAY: FLEX;JUSTIFY-CONTENT: RIGHT;">
                                 <form action="{{ route('kasir.submitdata') }}" method="post">
                                     @csrf
-                                    <button type="submit" class="btn btn-danger">Submit</button>
+                                    <button type="submit" class="btn btn-primary">Submit</button>
                                 </form>
                             </div>
                         </div>

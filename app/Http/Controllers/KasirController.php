@@ -38,7 +38,7 @@ class KasirController extends Controller
             $nomernota = nomernota::find(nomernota::all()->where('iduser', '=', Auth::user()->id)->last()->id)->nomernota;
         }
         $data = databarang::all();
-        $datakeranjang = kasir::all();
+        $datakeranjang = kasir::all()->where('nomernota', '=', $nomernota);
         return view('pages.kasir', ['data' => $data, 'datakeranjang' => $datakeranjang, 'nomernota' => $nomernota]);
     }
 
