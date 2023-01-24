@@ -53,30 +53,34 @@ class KasirController extends Controller
     {
         $fromdbbarang = databarang::find(request()->id);
 
-        $nomernota = nomernota::find(nomernota::all()->where('iduser', '=', Auth::user()->id)->last()->id)->nomernota;
+        if ($fromdbbarang->jumlahbarang != 0) {
 
 
-        if (count(kasir::all()->sortByDesc('updated_at')->where('namakasir', '=', Auth::user()->name)) > 0) {
-            $checkadanamauser = kasir::all()->sortByDesc('updated_at')->where('namakasir', '=', Auth::user()->name)->first()->nomernota;
-        } else {
-            $checkadanamauser = 0;
-        }
+            $nomernota = nomernota::find(nomernota::all()->where('iduser', '=', Auth::user()->id)->last()->id)->nomernota;
 
-        if ($nomernota != $checkadanamauser || count(kasir::where('idbarang', '=', request()->id)->where('nomernota', '=', $nomernota)->get()) == 0) {
-            kasir::create([
-                'nomernota' => $nomernota,
-                'namakasir' => Auth::user()->name,
-                'idbarang' => $fromdbbarang->id,
-                'barcode' => $fromdbbarang->barcode,
-                'namabarang' => $fromdbbarang->namabarang,
-                'jumlahbarang' => 1,
-                'hargajual' => $fromdbbarang->hargajual,
-            ]);
-        } else {
-            $datakasir = kasir::find(kasir::where('idbarang', '=', request()->id)->where('nomernota', '=', $nomernota)->first()->id);
-            $datakasir->jumlahbarang += 1;
-            $datakasir->update();
-            return redirect()->route('kasir.index');
+
+            if (count(kasir::all()->sortByDesc('updated_at')->where('namakasir', '=', Auth::user()->name)) > 0) {
+                $checkadanamauser = kasir::all()->sortByDesc('updated_at')->where('namakasir', '=', Auth::user()->name)->first()->nomernota;
+            } else {
+                $checkadanamauser = 0;
+            }
+
+            if ($nomernota != $checkadanamauser || count(kasir::where('idbarang', '=', request()->id)->where('nomernota', '=', $nomernota)->get()) == 0) {
+                kasir::create([
+                    'nomernota' => $nomernota,
+                    'namakasir' => Auth::user()->name,
+                    'idbarang' => $fromdbbarang->id,
+                    'barcode' => $fromdbbarang->barcode,
+                    'namabarang' => $fromdbbarang->namabarang,
+                    'jumlahbarang' => 1,
+                    'hargajual' => $fromdbbarang->hargajual,
+                ]);
+            } else {
+                $datakasir = kasir::find(kasir::where('idbarang', '=', request()->id)->where('nomernota', '=', $nomernota)->first()->id);
+                $datakasir->jumlahbarang += 1;
+                $datakasir->update();
+                return redirect()->route('kasir.index');
+            }
         }
         return redirect()->back();
     }
@@ -111,14 +115,12 @@ class KasirController extends Controller
      */
     public function edit()
     {
-        // dd(request()->all());
-        $data = kasir::find(request()->id);
-        // dd($data->idbarang);
-        // dd(databarang::find($data->idbarang)->jumlahbarang);
-        if (request()->data != 0) {
 
-            if (request()->data > databarang::find($data->idbarang)->jumlahbarang) {
+        $data = kasir::find(request()->id);
+        if (request()->data != 0) {
+            if ((int)request()->data > databarang::find($data->idbarang)->jumlahbarang) {
                 $data->jumlahbarang = databarang::find($data->idbarang)->jumlahbarang;
+                // dd('here');
             } else {
                 $data->jumlahbarang = request()->data;
             }
@@ -127,6 +129,7 @@ class KasirController extends Controller
             $data->delete();
             return response()->json(['status' => 'success']);
         }
+
         return response()->json(['status' => 'success', 'data' => $data->jumlahbarang]);
     }
 
@@ -155,12 +158,12 @@ class KasirController extends Controller
     public function submitdata()
     {
         $datakeranjang = kasir::find(kasir::all()->where('nomernota', '=', nomernota::find(nomernota::all()->where('iduser', '=', Auth::user()->id)->last()->id)->nomernota))->where('nomernota', '=', nomernota::find(nomernota::all()->where('iduser', '=', Auth::user()->id)->last()->id)->nomernota);
-        // dd($datakeranjang);
+
         $datajumlah = [];
         foreach ($datakeranjang as $key => $value) {
             array_push($datajumlah, $value->hargajual * $value->jumlahbarang);
         }
-        // dd(array_sum($datajumlah));
+
         return view('pages.submitbarang', ['datakeranjang' => $datakeranjang, 'sumdata' => array_sum($datajumlah)]);
     }
     public function print()
@@ -169,8 +172,15 @@ class KasirController extends Controller
 
         foreach ($getdatakasir as $key => $value) {
             report::create([
-                'nomernota' => nomernota::find(nomernota::all()->where('iduser', '=', Auth::user()->id)->last()->id)->nomernota, 'iduser' => Auth::user()->id, 'idbarang' => $value->idbarang, 'barangterjual' => $value->jumlahbarang, 'hargajual' => $value->hargajual
+                'nomernota' => nomernota::find(nomernota::all()->where('iduser', '=', Auth::user()->id)->last()->id)->nomernota,
+                'iduser' => Auth::user()->id,
+                'idbarang' => $value->idbarang,
+                'barangterjual' => $value->jumlahbarang,
+                'hargajual' => $value->hargajual
             ]);
+            $databarang = databarang::find($value->idbarang);
+            $databarang->jumlahbarang -= $value->jumlahbarang;
+            $databarang->update();
         }
         $nomernota = nomernota::find(nomernota::all()->where('iduser', '=', Auth::user()->id)->last()->id);
         $nomernota->nomernota += 1;

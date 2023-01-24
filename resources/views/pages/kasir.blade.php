@@ -139,7 +139,7 @@
                             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                         },
                         success: function(data) {
-                            // console.log(data.data);
+
                             mydata = data.data;
                         }
                     });
@@ -153,14 +153,14 @@
                         $('.tbvalue', this).each(function() {
                             var d = $(this).val() || $(this).text();
                             ret.push(d);
-                            // console.log(d);
+
                             if (d == "N/A") {
-                                // console.log(true);
+
                             }
                         });
                         return ret;
                     });
-                    // console.log(data);
+
                     var iddatabs = $(this).attr("data-bs-id");
                     var valuedatabs1 = this.value;
                     $.ajax({
@@ -218,14 +218,11 @@
 
                     $('#valuejumlahbarang' + attrtambah).val(data += 1);
                     var datahargajual = parseInt($('#hargajual' + attrtambah).html());
-                    // $('#hargatotal' + attrtambah).html(datahargajual * data);
-
-
                     $.ajax({
                         type: 'PUT',
                         data: {
                             'id': attrtambah,
-                            'data': datahargajual
+                            'data': data
                         },
                         url: "{{ route('kasir.edit') }}",
                         dataType: "json",
@@ -233,14 +230,13 @@
                             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                         },
                         success: function(data) {
-                            console.log(data.data);
                             var datahargajual = parseInt($('#hargajual' + attrtambah).html());
                             $('#hargatotal' + attrtambah).html(datahargajual * data.data);
                             $('#valuejumlahbarang' + attrtambah).val(data.data);
                         }
                     });
 
-                    // updatedb(attrtambah, data);
+
 
                 });
 
