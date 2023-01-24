@@ -218,8 +218,29 @@
 
                     $('#valuejumlahbarang' + attrtambah).val(data += 1);
                     var datahargajual = parseInt($('#hargajual' + attrtambah).html());
-                    $('#hargatotal' + attrtambah).html(datahargajual * data);
-                    updatedb(attrtambah, data);
+                    // $('#hargatotal' + attrtambah).html(datahargajual * data);
+
+
+                    $.ajax({
+                        type: 'PUT',
+                        data: {
+                            'id': attrtambah,
+                            'data': datahargajual
+                        },
+                        url: "{{ route('kasir.edit') }}",
+                        dataType: "json",
+                        headers: {
+                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                        },
+                        success: function(data) {
+                            console.log(data.data);
+                            var datahargajual = parseInt($('#hargajual' + attrtambah).html());
+                            $('#hargatotal' + attrtambah).html(datahargajual * data.data);
+                            $('#valuejumlahbarang' + attrtambah).val(data.data);
+                        }
+                    });
+
+                    // updatedb(attrtambah, data);
 
                 });
 

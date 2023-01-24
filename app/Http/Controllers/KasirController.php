@@ -55,7 +55,14 @@ class KasirController extends Controller
 
         $nomernota = nomernota::find(nomernota::all()->where('iduser', '=', Auth::user()->id)->last()->id)->nomernota;
 
-        if ($nomernota != kasir::all()->sortByDesc('updated_at')->where('namakasir', '=', Auth::user()->name)->first()->nomernota || count(kasir::where('idbarang', '=', request()->id)->where('nomernota', '=', $nomernota)->get()) == 0) {
+
+        if (count(kasir::all()->sortByDesc('updated_at')->where('namakasir', '=', Auth::user()->name)) > 0) {
+            $checkadanamauser = kasir::all()->sortByDesc('updated_at')->where('namakasir', '=', Auth::user()->name)->first()->nomernota;
+        } else {
+            $checkadanamauser = 0;
+        }
+
+        if ($nomernota != $checkadanamauser || count(kasir::where('idbarang', '=', request()->id)->where('nomernota', '=', $nomernota)->get()) == 0) {
             kasir::create([
                 'nomernota' => $nomernota,
                 'namakasir' => Auth::user()->name,
