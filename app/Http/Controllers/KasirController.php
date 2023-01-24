@@ -55,11 +55,7 @@ class KasirController extends Controller
 
         $nomernota = nomernota::find(nomernota::all()->where('iduser', '=', Auth::user()->id)->last()->id)->nomernota;
 
-        // dd(kasir::where('idbarang', '=', request()->id)->first()->id, databarang::find(request()->id)->first()->id);
-        // dd(databarang::find(request()->id)->first()->id == isset(kasir::where('idbarang', '=', request()->id)->first()->idbarang));
-        // gaada id nomornota jika dikasir ditemukan nomornota maka
-        // dd(kasir::all()->sortByDesc('updated_at')->where('namakasir', '=', Auth::user()->name)->first()->nomernota);
-        if ($nomernota != kasir::all()->sortByDesc('updated_at')->where('namakasir', '=', Auth::user()->name)->first()->nomernota && kasir::all()->sortByDesc('updated_at')->where('namakasir', '=', Auth::user()->name)->where('nomernota', '=', $nomernota)->first()->idbarang == $fromdbbarang->idbarang) {
+        if ($nomernota != kasir::all()->sortByDesc('updated_at')->where('namakasir', '=', Auth::user()->name)->first()->nomernota || count(kasir::where('idbarang', '=', request()->id)->where('nomernota', '=', $nomernota)->get()) == 0) {
             kasir::create([
                 'nomernota' => $nomernota,
                 'namakasir' => Auth::user()->name,
@@ -69,8 +65,8 @@ class KasirController extends Controller
                 'jumlahbarang' => 1,
                 'hargajual' => $fromdbbarang->hargajual,
             ]);
-        } else if (databarang::find(request()->id)->first()->id == kasir::all()->where('idbarang', '=', request()->id)->first()->idbarang) {
-            $datakasir = kasir::find(kasir::where('idbarang', '=', request()->id)->first()->id);
+        } else {
+            $datakasir = kasir::find(kasir::where('idbarang', '=', request()->id)->where('nomernota', '=', $nomernota)->first()->id);
             $datakasir->jumlahbarang += 1;
             $datakasir->update();
             return redirect()->route('kasir.index');
@@ -151,7 +147,8 @@ class KasirController extends Controller
     }
     public function submitdata()
     {
-        $datakeranjang = kasir::find(kasir::all()->where('nomernota', '=', nomernota::find(nomernota::all()->where('iduser', '=', Auth::user()->id)->last()->id)->nomernota));
+        $datakeranjang = kasir::find(kasir::all()->where('nomernota', '=', nomernota::find(nomernota::all()->where('iduser', '=', Auth::user()->id)->last()->id)->nomernota))->where('nomernota', '=', nomernota::find(nomernota::all()->where('iduser', '=', Auth::user()->id)->last()->id)->nomernota);
+        // dd($datakeranjang);
         $datajumlah = [];
         foreach ($datakeranjang as $key => $value) {
             array_push($datajumlah, $value->hargajual * $value->jumlahbarang);
