@@ -78,7 +78,7 @@
                                 </thead>
                                 <tbody>
                                     @foreach ($datakeranjang as $index => $d)
-                                        <tr class="{{ ($index + 1) % 2 == 0 ? 'even' : 'odd' }} data">
+                                        <tr class="{{ ((int) $index + 1) % 2 == 0 ? 'even' : 'odd' }} data">
                                             <td class="tbvalue">{{ $index + 1 }}</td>
                                             <td class="tbvalue">{{ $d->barcode }}</td>
                                             <td class="tbvalue">{{ $d->namabarang }}</td>
@@ -235,12 +235,7 @@
                             $('#valuejumlahbarang' + attrtambah).val(data.data);
                         }
                     });
-
-
-
                 });
-
-
             });
         </script>
         <script>

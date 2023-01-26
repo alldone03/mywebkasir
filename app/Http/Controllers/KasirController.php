@@ -40,7 +40,10 @@ class KasirController extends Controller
         }
 
         $data = databarang::all()->whereNotNull('hargajual');
-        $datakeranjang = kasir::where('nomernota', '=', $nomernota)->get();
+        $datakeranjang = kasir::where('nomernota', '=', $nomernota)->where('namakasir', '=', Auth::user()->name)->get();
+
+
+
         return view('pages.kasir', ['data' => $data, 'datakeranjang' => $datakeranjang, 'nomernota' => $nomernota]);
     }
 
@@ -168,7 +171,8 @@ class KasirController extends Controller
     }
     public function print()
     {
-        $getdatakasir = kasir::all()->where('nomernota', '=', nomernota::find(nomernota::all()->where('iduser', '=', Auth::user()->id)->last()->id)->nomernota);
+        // dd(request()->all());
+        $getdatakasir = kasir::where('nomernota', '=', nomernota::find(nomernota::all()->where('iduser', '=', Auth::user()->id)->last()->id)->nomernota)->get();
 
         foreach ($getdatakasir as $key => $value) {
             report::create([
@@ -182,8 +186,15 @@ class KasirController extends Controller
             $databarang->jumlahbarang -= $value->jumlahbarang;
             $databarang->update();
         }
+        $datajumlah = [];
+        foreach ($getdatakasir as $key => $value) {
+            array_push($datajumlah, $value->hargajual * $value->jumlahbarang);
+        }
         $nomernota = nomernota::find(nomernota::all()->where('iduser', '=', Auth::user()->id)->last()->id);
-        $nomernota->nomernota += 1;
+        $nomernota->nomernota = nomernota::all()->sortByDesc('nomernota')->first()->nomernota + 1;
         $nomernota->update();
+        // dd('hello');
+
+        return view('pages.print', ['total' => request()->total, 'datakasir' => $getdatakasir, 'nomernota' => $nomernota]);
     }
 }
